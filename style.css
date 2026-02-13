@@ -89,8 +89,8 @@ main#content {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 2rem 24px;
-    /* Restore horizontal padding here */
+    padding: 2rem 29px;
+    /* Increased horizontal padding (+5px) */
 }
 
 /* Custom scrollbar for main content */
@@ -581,7 +581,8 @@ header {
 
 @media (max-width: 640px) {
     main#content {
-        padding: 1.5rem 12px;
+        padding: 1.5rem 17px;
+        /* Increased horizontal padding (+5px) */
     }
 
     header {
