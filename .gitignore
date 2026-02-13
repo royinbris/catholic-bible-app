@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+brain/
+.agent/
+*.zip
+.system_generated/
+.tempmediaStorage/

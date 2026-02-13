@@ -1,0 +1,504 @@
+:root {
+    /* Color Palette */
+    --primary: #2d2a26;
+    --primary-light: #4a453f;
+    --accent: #8b7d6b;
+    --bg-stone-50: #fafaf9;
+    --bg-stone-100: #f5f5f4;
+    --border-stone-200: #e7e5e4;
+    --text-stone-900: #1c1917;
+    --text-stone-500: #78716c;
+    --white: #ffffff;
+
+    /* Subtitle Color */
+    --subtitle-purple: #4c1d95;
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: 'Noto Serif KR', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-stone-50);
+    color: var(--text-stone-900);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-family: var(--font-sans);
+    font-size: 18px;
+    /* New default size */
+    font-weight: 500;
+    /* New default weight */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Keep body fixed */
+    padding: 0;
+    /* Remove padding from body to let header/footer be full width if needed, or handle inside */
+}
+
+main#content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 2rem 24px;
+    /* Restore horizontal padding here */
+}
+
+/* Custom scrollbar for main content */
+main#content::-webkit-scrollbar {
+    width: 6px;
+}
+
+main#content::-webkit-scrollbar-thumb {
+    background: var(--border-stone-200);
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Layout & Utilities */
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.z-50 {
+    z-index: 50;
+}
+
+/* Opacity Utilities */
+.opacity-0 {
+    opacity: 0;
+}
+
+.opacity-100 {
+    opacity: 1;
+}
+
+.transition-opacity {
+    transition: opacity 0.3s ease;
+}
+
+.duration-300 {
+    transition-duration: 300ms;
+}
+
+/* Margin & Padding Utilities */
+.max-w-4xl {
+    max-width: 56rem;
+    /* 896px */
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mx-2 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.h-16 {
+    height: 4rem;
+    /* 64px */
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+/* Floating Settings Button Removed */
+
+#loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Utilities */
+.font-sans {
+    font-family: var(--font-sans);
+}
+
+.font-serif {
+    font-family: var(--font-serif);
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Glassmorphism Header */
+header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    padding: 0 24px;
+}
+
+/* Cards & Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border-stone-200);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card-saved {
+    background: var(--white);
+    border-color: var(--accent);
+    border-width: 2px;
+}
+
+.card-unsaved {
+    background: var(--bg-stone-100);
+    border-color: var(--border-stone-200);
+    color: var(--text-stone-500);
+}
+
+.card-unsaved .card-title {
+    color: var(--text-stone-500);
+}
+
+.nav-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: auto;
+    /* Push title to center or right if needed, but here we keep left alignment logic */
+}
+
+.nav-btn {
+    font-size: 0.95rem;
+    /* Slightly larger */
+    font-weight: 600;
+    color: var(--text-stone-500);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    background: var(--bg-stone-100);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-text-btn {
+    background: transparent;
+    border: 1px solid var(--border-stone-200);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.nav-text-btn:hover {
+    border-color: var(--primary);
+    background: var(--bg-stone-50);
+    color: var(--primary);
+}
+
+.nav-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+.nav-btn.active {
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
+}
+
+/* Selection Mode */
+.verse-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.verse-checkbox {
+    margin-top: 0.5rem;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--border-stone-300);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    /* Hidden by default */
+    flex-shrink: 0;
+}
+
+.verse-checkbox:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.selection-mode .verse-checkbox {
+    display: block;
+}
+
+.selection-mode p {
+    cursor: pointer;
+    transition: background 0.1s;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.selection-mode p:hover {
+    background-color: var(--bg-stone-100);
+}
+
+.card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    color: var(--primary);
+}
+
+.card-subtitle {
+    font-size: 0.7rem;
+    color: var(--text-stone-500);
+}
+
+/* Bible Reading View */
+.reading-container {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.005);
+}
+
+.bible-text {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--primary);
+}
+
+.bible-text p {
+    margin-bottom: 0.75rem;
+    text-align: justify;
+    font-weight: 500;
+}
+
+.bible-text h3 {
+    font-family: var(--font-sans);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--bg-stone-100);
+    scroll-margin-top: 100px;
+}
+
+.subtitle {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #4c1d95;
+    /* Dark purple */
+    margin: 2rem 0 1rem;
+    font-family: var(--font-sans);
+}
+
+/* Chapter Selection */
+.chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 0.75rem;
+}
+
+.chapter-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--white);
+    border: 1px solid var(--border-stone-200);
+    border-radius: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.chapter-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal */
+#settings-modal {
+    display: none;
+}
+
+#settings-modal.flex {
+    display: flex;
+}
+
+#data-summary {
+    position: relative;
+    border-left: 4px solid var(--accent);
+}
+
+#file-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#file-list::-webkit-scrollbar-thumb {
+    background: var(--border-stone-200);
+    border-radius: 10px;
+}
+
+#drop-zone.drag-over {
+    border-color: var(--accent);
+    background-color: var(--bg-stone-100);
+}
+
+.text-accent {
+    color: var(--accent);
+}
+
+@media (max-width: 640px) {
+    .reading-container {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+
+    .bible-text {
+        font-size: 1.1rem;
+    }
+}
