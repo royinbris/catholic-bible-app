@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bible-app-v1';
+const CACHE_NAME = 'bible-app-v2'; // Bumped version to v2
 const ASSETS = [
     './',
     './index.html',
@@ -8,9 +8,25 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', event => {
+    // Force the waiting service worker to become the active service worker
+    self.skipWaiting();
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => cache.addAll(ASSETS))
+    );
+});
+
+self.addEventListener('activate', event => {
+    // Take control of all open clients immediately
+    event.waitUntil(clients.claim());
+    // Remove old caches
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.filter(name => name !== CACHE_NAME)
+                    .map(name => caches.delete(name))
+            );
+        })
     );
 });
 
