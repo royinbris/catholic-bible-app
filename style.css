@@ -10,7 +10,8 @@
     --text-main: #1c1917;
     --text-muted: #78716c;
     --text-on-accent: #ffffff;
-    --subtitle-purple: #4c1d95;
+    --subtitle-purple: #c2410c;
+    /* Changed to Dark Orange for Light Mode */
 
     /* Semantic Mappings */
     --bg-stone-50: var(--bg-main);
