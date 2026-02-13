@@ -36,7 +36,8 @@
     --text-main: #e5e7eb;
     --text-muted: #a3a3a3;
     --text-on-accent: #1c1917;
-    --subtitle-purple: #a78bfa;
+    --subtitle-purple: #fbbf24;
+    /* Changed to Gold for Dark Mode */
 }
 
 /* System Preference Fallback */
@@ -52,7 +53,8 @@
         --text-main: #e5e7eb;
         --text-muted: #a3a3a3;
         --text-on-accent: #1c1917;
-        --subtitle-purple: #a78bfa;
+        --subtitle-purple: #fbbf24;
+        /* Changed to Gold for Dark Mode */
     }
 }
 
@@ -583,7 +585,35 @@ header {
     }
 
     header {
-        padding: 0 12px;
+        padding: 0 8px;
+        /* Slightly tighter padding */
+    }
+
+    .header-container-inner {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .header-nav-main {
+        gap: 0.75rem !important;
+        /* Reduced from gap-8 (2rem) */
+    }
+
+    .header-nav-group {
+        gap: 0.25rem !important;
+        /* Reduced from gap-4 (1rem) */
+    }
+
+    .header-controls {
+        gap: 0.5rem !important;
+        /* Reduced from gap-6 (1.5rem) */
+    }
+
+    .chapter-display {
+        font-size: 0.9rem;
+        line-height: 1.2;
+        max-width: 140px;
+        /* Limit width to favor 2 lines */
     }
 
     .reading-container {

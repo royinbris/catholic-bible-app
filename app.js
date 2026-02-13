@@ -341,7 +341,7 @@ const App = {
         let chapterDisplay = '';
         if (AppState.currentView === 'read' || AppState.currentView === 'chapters') {
             chapterDisplay = `
-                <div class="flex items-center text-sm font-bold mr-2 whitespace-nowrap">
+                <div class="flex items-center text-sm font-bold mr-1 chapter-display">
                     <span class="text-stone-400 mr-2">|</span>
                     <span class="text-primary">${AppState.book || ''} ${AppState.chapter ? AppState.chapter + '장' : ''}</span>
                 </div>
@@ -357,7 +357,7 @@ const App = {
             const btnClass = hasSelection ? 'bg-accent text-white border-accent' : 'bg-white text-stone-500 border-stone-200';
 
             selectionActionBtn = `
-                <button id="selection-btn" class="nav-btn nav-text-btn ml-2 ${btnClass}" onclick="App.handleSelectionAction()">
+                <button id="selection-btn" class="nav-btn nav-text-btn ${btnClass}" onclick="App.handleSelectionAction()">
                     ${btnText}
                 </button>
             `;
@@ -366,18 +366,18 @@ const App = {
 
         // Use headerTitle element as the container for our nav
         this.headerTitle.innerHTML = `
-            <div class="w-full flex justify-between items-center px-4">
-                <div class="flex items-center gap-8">
+            <div class="w-full flex justify-between items-center px-4 header-container-inner">
+                <div class="flex items-center gap-8 header-nav-main">
                     ${chapterDisplay}
                     <button class="nav-btn nav-text-btn ${backBtnHidden}" onclick="window.history.back()">
                         뒤로
                     </button>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 header-nav-group">
                         <button class="nav-btn nav-text-btn ${oldActive}" onclick="App.navigate('books', {testament: 'old'})">구약</button>
                         <button class="nav-btn nav-text-btn ${newActive}" onclick="App.navigate('books', {testament: 'new'})">신약</button>
                     </div>
                 </div>
-                <div class="flex items-center gap-6" id="header-controls">
+                <div class="flex items-center gap-6 header-controls" id="header-controls">
                     ${selectionActionBtn}
                     
                     <button id="theme-toggle-header" class="theme-toggle-btn ml-1" onclick="App.cycleTheme()" aria-label="테마 변경">
