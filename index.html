@@ -107,7 +107,23 @@
 
     <script src="lib/db.js"></script>
     <script src="lib/parser.js"></script>
-    <script src="app.js"></script>
+    <!-- Force Cache Clear Script -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function (registrations) {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        // Clear all caches
+        if ('caches' in window) {
+            caches.keys().then(function (names) {
+                for (let name of names) caches.delete(name);
+            });
+        }
+    </script>
+    <script src="app.js" defer></script>
 </body>
 
 </html>
