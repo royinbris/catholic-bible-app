@@ -1,21 +1,59 @@
 :root {
-    /* Color Palette */
+    /* Color Palette - Light (Default) */
     --primary: #2d2a26;
     --primary-light: #4a453f;
     --accent: #8b7d6b;
-    --bg-stone-50: #fafaf9;
-    --bg-stone-100: #f5f5f4;
-    --border-stone-200: #e7e5e4;
-    --text-stone-900: #1c1917;
-    --text-stone-500: #78716c;
-    --white: #ffffff;
-
-    /* Subtitle Color */
+    --bg-main: #E5E2D9;
+    --bg-surface: #E5E2D9;
+    --bg-surface-alt: #dad7cc;
+    --border: #c9c5b8;
+    --text-main: #1c1917;
+    --text-muted: #78716c;
+    --text-on-accent: #ffffff;
     --subtitle-purple: #4c1d95;
+
+    /* Semantic Mappings */
+    --bg-stone-50: var(--bg-main);
+    --bg-stone-100: var(--bg-surface-alt);
+    --border-stone-200: var(--border);
+    --text-stone-900: var(--text-main);
+    --text-stone-500: var(--text-muted);
+    --white: var(--bg-surface);
 
     /* Typography */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-serif: 'Noto Serif KR', serif;
+}
+
+[data-theme="dark"] {
+    --primary: #e7e5e4;
+    --primary-light: #d6d3d1;
+    --accent: #a89f91;
+    --bg-main: #1c1917;
+    --bg-surface: #262626;
+    --bg-surface-alt: #171717;
+    --border: #404040;
+    --text-main: #e5e7eb;
+    --text-muted: #a3a3a3;
+    --text-on-accent: #1c1917;
+    --subtitle-purple: #a78bfa;
+}
+
+/* System Preference Fallback */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --primary: #e7e5e4;
+        --primary-light: #d6d3d1;
+        --accent: #a89f91;
+        --bg-main: #1c1917;
+        --bg-surface: #262626;
+        --bg-surface-alt: #171717;
+        --border: #404040;
+        --text-main: #e5e7eb;
+        --text-muted: #a3a3a3;
+        --text-on-accent: #1c1917;
+        --subtitle-purple: #a78bfa;
+    }
 }
 
 * {
@@ -66,12 +104,40 @@ main#content::-webkit-scrollbar-thumb {
     display: none !important;
 }
 
-/* Layout & Utilities */
+/* Layout \u0026 Utilities */
 #app {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+}
+
+#main-header {
+    background: var(--bg-main);
+    /* Match body background */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.theme-toggle-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: var(--text-muted);
+    border: none;
+    background: transparent;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--bg-surface-alt);
+    color: var(--text-main);
 }
 
 .flex {
@@ -98,8 +164,28 @@ main#content::-webkit-scrollbar-thumb {
     justify-content: space-between;
 }
 
+.gap-1 {
+    gap: 0.25rem;
+}
+
 .gap-2 {
     gap: 0.5rem;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.gap-6 {
+    gap: 1.5rem;
+}
+
+.gap-8 {
+    gap: 2rem;
 }
 
 .relative {
@@ -240,13 +326,12 @@ header {
 }
 
 .card {
-    background: var(--white);
-    border: 1px solid var(--border-stone-200);
+    background: var(--bg-surface-alt);
+    border: 1px solid var(--border);
     border-radius: 0.5rem;
     padding: 0.6rem 0.8rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .card:hover {
@@ -378,10 +463,10 @@ header {
 
 /* Bible Reading View */
 .reading-container {
-    background: var(--white);
-    padding: 2.5rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01), 0 2px 4px -1px rgba(0, 0, 0, 0.005);
+    background: transparent;
+    padding: 2.5rem 0;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .bible-text {
@@ -493,12 +578,154 @@ header {
 }
 
 @media (max-width: 640px) {
+    main#content {
+        padding: 1.5rem 12px;
+    }
+
+    header {
+        padding: 0 12px;
+    }
+
     .reading-container {
-        padding: 1.5rem;
-        border-radius: 1rem;
+        padding: 0.75rem 0;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .bible-text {
         font-size: 1.1rem;
     }
+
+    .nav-group {
+        gap: 0.35rem;
+    }
+
+    .nav-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-text-btn {
+        padding: 0.3rem 0.5rem;
+    }
+
+    #header-info {
+        font-size: 0.8rem;
+        margin-left: 0.25rem;
+    }
+}
+
+/* Settings Modal & Theme Components */
+#settings-modal {
+    background: var(--bg-surface-alt) !important;
+}
+
+.settings-container {
+    max-width: 36rem;
+    margin: 0 auto;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.settings-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.settings-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.settings-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+}
+
+.theme-toggle-group {
+    display: flex;
+    gap: 8px;
+}
+
+.theme-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface-alt);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-btn.active {
+    background: var(--accent);
+    color: var(--text-on-accent);
+    border-color: var(--accent);
+}
+
+.close-btn {
+    padding: 8px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#drop-zone {
+    border: 2px dashed var(--border);
+    color: var(--text-muted);
+}
+
+#drop-zone svg {
+    stroke: var(--text-muted);
+}
+
+#data-status-text {
+    color: var(--text-main);
+}
+
+#data-summary {
+    background: var(--bg-main);
+    border: 1px solid var(--bg-surface-alt);
+    color: var(--text-main);
+}
+
+
+.bible-text {
+    color: var(--primary);
+}
+
+/* Scrollbar theme fixes */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
 }

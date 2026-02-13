@@ -95,14 +95,14 @@ const AppState = {
 
     // New Feature States
     selectionMode: false,
-    selectedVerses: new Map()  // Map<verseId, {chapter, text}>
+    selectedVerses: new Map(),  // Map<verseId, {chapter, text}>
+    theme: 'system' // system, light, dark
 };
 
 const App = {
     async init() {
         this.viewContainer = document.getElementById('view-container');
         this.headerTitle = document.getElementById('header-title');
-        this.headerInfo = document.getElementById('header-info');
         this.loading = document.getElementById('loading');
 
         // Settings elements
@@ -113,6 +113,8 @@ const App = {
         this.fileInput = document.getElementById('file-input');
         this.dataStatusText = document.getElementById('data-status-text');
         this.clearDataBtn = document.getElementById('clear-data-btn');
+
+        this.initTheme();
 
         // Initialize DB
         try {
@@ -155,6 +157,40 @@ const App = {
                 await this.updateDataStatus();
             }
         });
+
+        this.setupThemeEvents();
+    },
+
+    initTheme() {
+        const savedTheme = localStorage.getItem('app-theme') || 'system';
+        this.applyTheme(savedTheme);
+    },
+
+    applyTheme(theme) {
+        AppState.theme = theme;
+        localStorage.setItem('app-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+
+        // Update UI buttons
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.themeVal === theme);
+        });
+    },
+
+    setupThemeEvents() {
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.themeVal;
+                this.applyTheme(theme);
+            });
+        });
+    },
+
+    cycleTheme() {
+        const themes = ['system', 'light', 'dark'];
+        let nextIndex = (themes.indexOf(AppState.theme) + 1) % themes.length;
+        this.applyTheme(themes[nextIndex]);
+        this.renderHeader(); // Refresh header to update icon
     },
 
     toggleModal(show) {
@@ -301,6 +337,17 @@ const App = {
         const oldActive = AppState.testament === 'old' ? 'active' : '';
         const newActive = AppState.testament === 'new' ? 'active' : '';
 
+        // Chapter Info - Now positioned on the far left
+        let chapterDisplay = '';
+        if (AppState.currentView === 'read' || AppState.currentView === 'chapters') {
+            chapterDisplay = `
+                <div class="flex items-center text-sm font-bold mr-2 whitespace-nowrap">
+                    <span class="text-stone-400 mr-2">|</span>
+                    <span class="text-primary">${AppState.book || ''} ${AppState.chapter ? AppState.chapter + '장' : ''}</span>
+                </div>
+            `;
+        }
+
         // Select/Copy Button Logic (Only visible in read view)
         let selectionActionBtn = '';
         if (AppState.currentView === 'read') {
@@ -319,20 +366,34 @@ const App = {
 
         // Use headerTitle element as the container for our nav
         this.headerTitle.innerHTML = `
-            <div class="w-full flex justify-between items-center">
-                <div class="flex items-center gap-2 ${AppState.currentView === 'home' ? 'invisible' : ''}">
+            <div class="w-full flex justify-between items-center px-4">
+                <div class="flex items-center gap-8">
+                    ${chapterDisplay}
                     <button class="nav-btn nav-text-btn ${backBtnHidden}" onclick="window.history.back()">
-                        뒤로가기
+                        뒤로
                     </button>
-                    <button class="nav-btn nav-text-btn ${oldActive}" onclick="App.navigate('books', {testament: 'old'})">구약</button>
-                    <button class="nav-btn nav-text-btn ${newActive}" onclick="App.navigate('books', {testament: 'new'})">신약</button>
+                    <div class="flex items-center gap-4">
+                        <button class="nav-btn nav-text-btn ${oldActive}" onclick="App.navigate('books', {testament: 'old'})">구약</button>
+                        <button class="nav-btn nav-text-btn ${newActive}" onclick="App.navigate('books', {testament: 'new'})">신약</button>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2" id="header-controls">
+                <div class="flex items-center gap-6" id="header-controls">
                     ${selectionActionBtn}
+                    
+                    <button id="theme-toggle-header" class="theme-toggle-btn ml-1" onclick="App.cycleTheme()" aria-label="테마 변경">
+                        ${AppState.theme === 'dark' ? `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                        ` : AppState.theme === 'light' ? `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        ` : `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                        `}
+                    </button>
+
                     ${AppState.currentView === 'home' ? `
                     <button id="settings-btn" class="flex items-center justify-center rounded-full hover:bg-stone-100 transition-colors" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px;" onclick="App.toggleModal(true)" aria-label="설정">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="#57534e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
                             <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                             <circle cx="12" cy="12" r="3" />
                         </svg>
@@ -341,16 +402,6 @@ const App = {
                 </div>
             </div>
         `;
-
-        if (AppState.currentView === 'read' || AppState.currentView === 'chapters') {
-            this.headerInfo.innerHTML = `
-                <span class="text-stone-300 mx-2">|</span>
-                <span class="font-bold text-stone-800">${AppState.book || ''} ${AppState.chapter ? AppState.chapter + '장' : ''}</span>
-            `;
-        } else {
-            this.headerInfo.innerHTML = '';
-        }
-
     },
 
     renderHome() {
@@ -486,6 +537,11 @@ const App = {
             // Using the updated parser
             const chapters = BibleParser.parseBook(markdown);
             this.showLoading(false);
+
+            // Remove all text within parentheses ( ) from the HTML content
+            Object.keys(chapters).forEach(key => {
+                chapters[key] = chapters[key].replace(/\([^)]*\)/g, '');
+            });
 
             // Apply Font Size (Removed per user request - use system zoom)
             // const fontSizeStyle = `font-size: ${AppState.fontSize}px;`; 
