@@ -97,7 +97,8 @@ const AppState = {
     selectionMode: false,
     selectedVerses: new Map(),  // Map<verseId, {chapter, text}>
     theme: 'system', // system, light, dark
-    fontSize: 18.0   // Default pixel size
+    fontSize: 18.0,   // Default pixel size
+    showFontSizeControl: false // Header popover state
 };
 
 const App = {
@@ -169,6 +170,19 @@ const App = {
         this.fontDecrease.addEventListener('click', () => this.adjustFontSize(-0.5));
         this.fontIncrease.addEventListener('click', () => this.adjustFontSize(0.5));
 
+        // Global click listener for closing font popover
+        document.addEventListener('click', (e) => {
+            if (!AppState.showFontSizeControl) return;
+
+            const fontBtn = document.getElementById('header-font-btn');
+            const popover = e.target.closest('.absolute');
+
+            if (fontBtn && !fontBtn.contains(e.target) && !popover) {
+                AppState.showFontSizeControl = false;
+                this.renderHeader();
+            }
+        });
+
         this.setupThemeEvents();
     },
 
@@ -196,15 +210,32 @@ const App = {
     applyFontSize(size) {
         AppState.fontSize = size;
         document.documentElement.style.setProperty('--font-size', `${size}px`);
+
+        // Update settings modal display if it exists
         if (this.fontSizeDisplay) {
             this.fontSizeDisplay.innerText = size.toFixed(1);
         }
+
+        // Also update header display if control is open
+        if (AppState.showFontSizeControl) {
+            this.renderHeader();
+        } else {
+            // Update only the button text in header if it exists to avoid full re-render
+            const fontBtn = document.getElementById('header-font-btn');
+            if (fontBtn) fontBtn.innerText = size.toFixed(1);
+        }
+
         localStorage.setItem('app-font-size', size);
     },
 
     adjustFontSize(delta) {
         const newSize = Math.max(12, Math.min(40, AppState.fontSize + delta));
         this.applyFontSize(newSize);
+    },
+
+    toggleFontSizeControl() {
+        AppState.showFontSizeControl = !AppState.showFontSizeControl;
+        this.renderHeader(); // Re-render to show/hide popover
     },
 
     setupThemeEvents() {
@@ -394,23 +425,48 @@ const App = {
         }
 
 
+        // Font Size Control (Visible in all views but optimized for read)
+        const fontSizeVal = AppState.fontSize.toFixed(1);
+        const fontSizeBtn = `
+            <div class="relative flex items-center">
+                <button id="header-font-btn" class="nav-btn nav-text-btn font-mono" onclick="App.toggleFontSizeControl()">
+                    ${fontSizeVal}
+                </button>
+                ${AppState.showFontSizeControl ? `
+                <div class="absolute top-full right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl shadow-xl p-3 z-[100] flex items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-200" style="min-width: 140px;">
+                    <button class="w-10 h-10 flex items-center justify-center bg-stone-100 dark:bg-stone-700 rounded-lg active:scale-95 transition-transform text-stone-700 dark:text-stone-200" onclick="App.adjustFontSize(-0.5); event.stopPropagation();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="flex flex-col items-center flex-1">
+                        <span class="text-base font-bold text-stone-900 dark:text-white">${fontSizeVal}</span>
+                        <span class="text-[10px] text-stone-400 uppercase font-black">PX</span>
+                    </div>
+                    <button class="w-10 h-10 flex items-center justify-center bg-stone-100 dark:bg-stone-700 rounded-lg active:scale-95 transition-transform text-stone-700 dark:text-stone-200" onclick="App.adjustFontSize(0.5); event.stopPropagation();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                </div>
+                ` : ''}
+            </div>
+        `;
+
         // Use headerTitle element as the container for our nav
         this.headerTitle.innerHTML = `
             <div class="w-full flex justify-between items-center px-4 header-container-inner">
-                <div class="flex items-center gap-8 header-nav-main">
+                <div class="flex items-center gap-3 sm:gap-6 header-nav-main">
                     ${chapterDisplay}
                     <button class="nav-btn nav-text-btn ${backBtnHidden}" onclick="window.history.back()">
                         뒤로
                     </button>
-                    <div class="flex items-center gap-4 header-nav-group">
+                    <div class="flex items-center gap-2 sm:gap-3 header-nav-group">
                         <button class="nav-btn nav-text-btn ${oldActive}" onclick="App.navigate('books', {testament: 'old'})">구약</button>
                         <button class="nav-btn nav-text-btn ${newActive}" onclick="App.navigate('books', {testament: 'new'})">신약</button>
                     </div>
                 </div>
-                <div class="flex items-center gap-6 header-controls" id="header-controls">
+                <div class="flex items-center gap-2 sm:gap-4 header-controls" id="header-controls">
                     ${selectionActionBtn}
+                    ${fontSizeBtn}
                     
-                    <button id="theme-toggle-header" class="theme-toggle-btn ml-1" onclick="App.cycleTheme()" aria-label="테마 변경">
+                    <button id="theme-toggle-header" class="theme-toggle-btn" onclick="App.cycleTheme()" aria-label="테마 변경">
                         ${AppState.theme === 'dark' ? `
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
                         ` : AppState.theme === 'light' ? `
@@ -421,7 +477,7 @@ const App = {
                     </button>
 
                     ${AppState.currentView === 'home' ? `
-                    <button id="settings-btn" class="flex items-center justify-center rounded-full hover:bg-stone-100 transition-colors" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px;" onclick="App.toggleModal(true)" aria-label="설정">
+                    <button id="settings-btn" class="flex items-center justify-center rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors" style="width: 40px; height: 40px; min-width: 40px; min-height: 40px;" onclick="App.toggleModal(true)" aria-label="설정">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
                             <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
