@@ -552,7 +552,7 @@ header {
 }
 
 .bible-text p {
-    margin-bottom: 0.1rem;
+    margin-bottom: 5rem;
     /* Reduced spacing by half */
     text-align: justify;
     font-weight: 400;
