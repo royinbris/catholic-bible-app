@@ -96,7 +96,8 @@ const AppState = {
     // New Feature States
     selectionMode: false,
     selectedVerses: new Map(),  // Map<verseId, {chapter, text}>
-    theme: 'system' // system, light, dark
+    theme: 'system', // system, light, dark
+    fontSize: 18.0   // Default pixel size
 };
 
 const App = {
@@ -114,7 +115,13 @@ const App = {
         this.dataStatusText = document.getElementById('data-status-text');
         this.clearDataBtn = document.getElementById('clear-data-btn');
 
+        // Font Size elements
+        this.fontDecrease = document.getElementById('font-decrease');
+        this.fontIncrease = document.getElementById('font-increase');
+        this.fontSizeDisplay = document.getElementById('font-size-display');
+
         this.initTheme();
+        this.initFontSize();
 
         // Initialize DB
         try {
@@ -158,6 +165,10 @@ const App = {
             }
         });
 
+        // Font Size Adjustment
+        this.fontDecrease.addEventListener('click', () => this.adjustFontSize(-0.5));
+        this.fontIncrease.addEventListener('click', () => this.adjustFontSize(0.5));
+
         this.setupThemeEvents();
     },
 
@@ -175,6 +186,25 @@ const App = {
         document.querySelectorAll('.theme-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.themeVal === theme);
         });
+    },
+
+    initFontSize() {
+        const savedSize = parseFloat(localStorage.getItem('app-font-size')) || 18.0;
+        this.applyFontSize(savedSize);
+    },
+
+    applyFontSize(size) {
+        AppState.fontSize = size;
+        document.documentElement.style.setProperty('--font-size', `${size}px`);
+        if (this.fontSizeDisplay) {
+            this.fontSizeDisplay.innerText = size.toFixed(1);
+        }
+        localStorage.setItem('app-font-size', size);
+    },
+
+    adjustFontSize(delta) {
+        const newSize = Math.max(12, Math.min(40, AppState.fontSize + delta));
+        this.applyFontSize(newSize);
     },
 
     setupThemeEvents() {

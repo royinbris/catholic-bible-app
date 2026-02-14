@@ -24,6 +24,7 @@
     /* Typography */
     --font-sans: 'IBM Plex Sans KR', sans-serif;
     --font-serif: 'IBM Plex Sans KR', sans-serif;
+    --font-size: 18px;
 }
 
 [data-theme="dark"] {
@@ -72,8 +73,8 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     font-family: var(--font-sans);
-    font-size: 18px;
-    /* New default size */
+    font-size: var(--font-size);
+    /* Dynamic font size */
     font-weight: 400;
     /* New default weight */
     height: 100vh;
@@ -706,6 +707,56 @@ header {
     background: var(--accent);
     color: var(--text-on-accent);
     border-color: var(--accent);
+}
+
+/* Font Size Controls */
+.font-control-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-surface-alt);
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.font-size-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.font-size-btn:active {
+    transform: scale(0.95);
+    background: var(--bg-main);
+}
+
+.font-size-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#font-size-display {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.font-size-unit {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .close-btn {
