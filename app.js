@@ -429,7 +429,7 @@ const App = {
         const fontSizeVal = AppState.fontSize.toFixed(1);
         const fontSizeBtn = `
             <div class="relative flex items-center">
-                <button id="header-font-btn" class="nav-btn nav-text-btn font-mono" onclick="App.toggleFontSizeControl()">
+                <button id="header-font-btn" class="nav-btn nav-text-btn font-mono" onclick="App.toggleFontSizeControl(); event.stopPropagation();">
                     ${fontSizeVal}
                 </button>
                 ${AppState.showFontSizeControl ? `
