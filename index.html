@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js');
@@ -86,20 +85,15 @@
 
                 <!-- Cloud Section Box -->
                 <div class="settings-box">
-                    <label class="settings-label">클라우드 자동 설치</label>
-                    <div class="flex flex-col gap-3">
-                        <button id="cloud-install-btn"
-                            class="w-full py-4 bg-accent text-white font-bold rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="17 8 12 3 7 8" />
-                                <line x1="12" x2="12" y1="3" y2="15" />
-                            </svg>
-                            구글 드라이브에서 자동 설치
-                        </button>
-                        <p id="cloud-status" class="text-xs text-center text-stone-400 hidden"></p>
+                    <label class="settings-label">클라우드 데이터 (권장)</label>
+                    <div class="flex flex-col gap-3 p-4 bg-stone-50 rounded-xl border border-stone-100">
+                        <p class="text-sm font-medium text-stone-700">성경 73권 전체 데이터를 한꺼번에 받으실 수 있습니다.</p>
+                        <ol class="text-xs text-stone-500 list-decimal pl-4 space-y-1">
+                            <li><a href="https://drive.google.com/file/d/1ReNAfW9jpSGI_vkvcBz3gNyXIH4p2atm/view?usp=drive_link"
+                                    target="_blank" class="text-accent font-bold underline">구글 드라이브 링크</a>를 클릭하세요.</li>
+                            <li>ZIP 파일을 다운로드한 후 <strong>압축을 해제</strong>하세요.</li>
+                            <li>압축이 풀린 73개의 .md 파일을 위의 <strong>'데이터 업로드'</strong> 영역에 모두 끌어다 놓으세요.</li>
+                        </ol>
                     </div>
                 </div>
 

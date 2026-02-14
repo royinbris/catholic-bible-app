@@ -111,8 +111,6 @@ const App = {
         this.closeModalFooter = document.getElementById('close-modal-footer');
         this.dropZone = document.getElementById('drop-zone');
         this.fileInput = document.getElementById('file-input');
-        this.cloudInstallBtn = document.getElementById('cloud-install-btn');
-        this.cloudStatus = document.getElementById('cloud-status');
         this.dataStatusText = document.getElementById('data-status-text');
         this.clearDataBtn = document.getElementById('clear-data-btn');
 
@@ -159,8 +157,6 @@ const App = {
                 await this.updateDataStatus();
             }
         });
-
-        this.cloudInstallBtn.addEventListener('click', () => this.installFromCloud());
 
         this.setupThemeEvents();
     },
