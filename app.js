@@ -225,59 +225,6 @@ const App = {
         this.render(); // Refresh the current view to show the newly loaded data
     },
 
-    async installFromCloud() {
-        const fileId = '1ReNAfW9jpSGI_vkvcBz3gNyXIH4p2atm';
-        // Using a more robust direct download URL format
-        const directUrl = `https://docs.google.com/uc?export=download&id=${fileId}`;
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
-        const downloadUrl = `${proxyUrl}${encodeURIComponent(directUrl)}`;
-
-        this.cloudInstallBtn.disabled = true;
-        this.cloudStatus.classList.remove('hidden');
-        this.cloudStatus.innerText = '성경 데이터를 내려받는 중...';
-        this.cloudStatus.className = 'text-xs text-center text-stone-400';
-
-        try {
-            const response = await fetch(downloadUrl);
-            if (!response.ok) throw new Error('다운로드에 실패했습니다.');
-
-            const blob = await response.blob();
-            this.cloudStatus.innerText = '압축 해제 중...';
-
-            const zip = await JSZip.loadAsync(blob);
-            const files = Object.keys(zip.files).filter(name => name.endsWith('.md'));
-
-            if (files.length === 0) throw new Error('ZIP 파일 내에 성경 데이터(.md)가 없습니다.');
-
-            this.cloudStatus.innerText = `데이터 저장 중... (0 / ${files.length})`;
-            let count = 0;
-
-            for (const filename of files) {
-                const content = await zip.files[filename].async('string');
-                // Extract just the base filename if it's in a subfolder
-                const baseName = filename.split('/').pop();
-                await BibleDB.saveBook(baseName, content);
-                count++;
-                this.cloudStatus.innerText = `데이터 저장 중... (${count} / ${files.length})`;
-            }
-
-            alert(`${count}개의 성경 파일이 모두 설치되었습니다.`);
-            this.cloudStatus.innerText = '설치 완료!';
-            this.cloudStatus.className = 'text-xs text-center text-green-500 font-bold';
-
-            await this.updateDataStatus();
-            this.render();
-
-        } catch (err) {
-            console.error(err);
-            this.cloudStatus.innerText = `오류: ${err.message}`;
-            this.cloudStatus.className = 'text-xs text-center text-red-500 font-bold';
-            alert(`자동 설치 중 오류가 발생했습니다: ${err.message}\n직접 업로드 방식을 사용해 주세요.`);
-        } finally {
-            this.cloudInstallBtn.disabled = false;
-        }
-    },
-
     async updateDataStatus() {
         const names = await BibleDB.getAllBookNames();
         // Normalize names to NFC for sorting and consistency
